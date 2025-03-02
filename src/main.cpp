@@ -55,6 +55,9 @@ void handleWebSocketMessage(void *arg, uint8_t * data, size_t len);
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient * client, AwsEventType type, 
     void * arg, uint8_t * data, size_t len);
 
+void readUart();
+
+
 void setup() 
 {
     Serial.begin(115200);
@@ -108,8 +111,16 @@ void setup()
 
 void loop() 
 {
+
     if (ledState == H)  digitalWrite(led5, LOW); 
     else digitalWrite(led5, HIGH); // inverse logic!
+
+    readUart();
+
+
+
+
+
 }
 
 void initSPIFFS()
@@ -176,6 +187,69 @@ String readFromEEPROM(int address)
   return word;
 }
 
+void readUart(void)
+{
+    int startIndex, endIndex;
+
+    while (Serial.available() > 0) 
+    {
+        char receivedChar = Serial.read(); // Einzelnes Zeichen lesen
+
+        if (receivedChar == '\n') 
+        {
+        // Wenn ein Zeilenumbruch empfangen wird, Ausgabe und Text zurücksetzen
+           Serial.println("Empfangene Daten: " + receivedText); // Daten ausgeben
+           receivedText = ""; // Textfeld zurücksetzen
+        } 
+        else 
+        {
+           receivedText += receivedChar; // neues Zeichen an das Textfeld anhängen
+           receivedText.trim(); // Leerzeichen am Anfang und Ende entfernen
+           
+           startIndex = 0; 
+         
+           // Auswerten: 
+           startIndex = receivedText.indexOf("\"ssid\":\"");
+           //"ssid":"   das sind 8 Zeichen!  - gesendet wurde zB: "ssid":"meinSSIDWort"
+           //                                                     12345678  
+           if (startIndex != -1)
+           {
+               startIndex += 8;
+               endIndex = receivedText.indexOf("\"", startIndex);
+               
+               if (endIndex != -1)
+               {
+                   receivedWord = receivedText.substring(startIndex, endIndex);
+                   printf("\nUserWort erkannt .%s.", receivedWord);
+                   store2EEPROM(receivedWord, EEPROM_SSID_ADDR);
+               }
+            }
+
+            startIndex = receivedText.indexOf("\"password\":\"");
+            //"password":"   das sind 12 Zeichen!
+            
+            if (startIndex != -1)
+            {
+                startIndex += 12;
+                endIndex = receivedText.indexOf("\"", startIndex);
+                if (endIndex != -1)
+                {
+                    receivedWord = receivedText.substring(startIndex, endIndex);
+                    printf("\nPassword erkannt .%s.", receivedWord);
+                    store2EEPROM(receivedWord, EEPROM_PASSWORD_ADDR);
+                }
+            }
+            
+            if (receivedText == "RESET") 
+            {
+                Serial.println("Rebooting...");
+                ESP.restart(); // Neustart des ESP32
+            }
+        }
+    }
+}
+
+
 String processor(const String& var)
 {
     if (var == "STATE") 
@@ -192,6 +266,12 @@ String processor(const String& var)
             printf("--off--\n");
             return "--OFF--";
         }
+    }
+
+    if (var == "CHECK")
+    {
+        printf("check ...\n");
+        return "ok!";
     }
 
     return String();
@@ -248,3 +328,4 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient * client, AwsEventType
         break;
     }
 }
+

@@ -75,9 +75,9 @@ void setup()
     //Serial.println("Daten gelesen: \n" + String(dataToRead));
 
     ssidFromEEPROM = readFromEEPROM(EEPROM_SSID_ADDR);
-    printf("im EEPROM gefunden: .%s.\n", ssidFromEEPROM);
+    printf("SSID gefunden: .%s.\n", ssidFromEEPROM);
     passwordFromEEPROM = readFromEEPROM(EEPROM_PASSWORD_ADDR);
-    printf("im PASSWOR gefunden: .%s.\n", passwordFromEEPROM);
+    printf("PASSWORD gefunden: .%s.\n", passwordFromEEPROM);
 
     // use ProcessingConfig to store new eeprom values
 
@@ -194,16 +194,10 @@ void readUart(void)
     while (Serial.available() > 0) 
     {
         char receivedChar = Serial.read(); // Einzelnes Zeichen lesen
+        Serial.print(receivedChar);
 
         if (receivedChar == '\n') 
         {
-        // Wenn ein Zeilenumbruch empfangen wird, Ausgabe und Text zurücksetzen
-           Serial.println("Empfangene Daten: " + receivedText); // Daten ausgeben
-           receivedText = ""; // Textfeld zurücksetzen
-        } 
-        else 
-        {
-           receivedText += receivedChar; // neues Zeichen an das Textfeld anhängen
            receivedText.trim(); // Leerzeichen am Anfang und Ende entfernen
            
            startIndex = 0; 
@@ -227,6 +221,7 @@ void readUart(void)
 
             startIndex = receivedText.indexOf("\"password\":\"");
             //"password":"   das sind 12 Zeichen!
+            //A1-6B8203
             
             if (startIndex != -1)
             {
@@ -245,6 +240,14 @@ void readUart(void)
                 Serial.println("Rebooting...");
                 ESP.restart(); // Neustart des ESP32
             }
+
+        // Wenn ein Zeilenumbruch empfangen wird, Ausgabe und Text zurücksetzen
+           Serial.print("\ncommand: "); // Daten ausgeben
+           receivedText = ""; // Textfeld zurücksetzen
+        } 
+        else 
+        {
+           receivedText += receivedChar; // neues Zeichen an das Textfeld anhängen
         }
     }
 }

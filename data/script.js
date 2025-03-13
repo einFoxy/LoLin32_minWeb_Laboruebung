@@ -45,11 +45,13 @@ function initButton() {
     document.getElementById('bOFF').addEventListener('click', toggleOFF);
 }
 
+//task 3
 function toggleON(event) {
     websocket.send('bON'); 
     console.log("toggleON!");
 }
 
+//task 3
 function toggleOFF(event) {
     websocket.send('bOFF'); 
     console.log("toggleOFF!");

@@ -61,6 +61,7 @@ void readUart();
 void setup() 
 {
     Serial.begin(115200);
+    //task 1
     printf("start!");
 
     if (!EEPROM.begin(EEPROM_SIZE)) {
@@ -74,6 +75,7 @@ void setup()
     //dataToRead = EEPROM.read(EEPROM_ADDR);
     //Serial.println("Daten gelesen: \n" + String(dataToRead));
 
+    //task 1
     ssidFromEEPROM = readFromEEPROM(EEPROM_SSID_ADDR);
     printf("SSID gefunden: .%s.\n", ssidFromEEPROM);
     passwordFromEEPROM = readFromEEPROM(EEPROM_PASSWORD_ADDR);
@@ -85,6 +87,7 @@ void setup()
 
     digitalWrite(led5, L); // inverse logic!
 
+    //task 1
     initSPIFFS();
     initWiFi();
     initWebSocket();
@@ -129,6 +132,7 @@ void loop()
 
 }
 
+//task 1
 void initSPIFFS()
 {
     if (!SPIFFS.begin(true))
@@ -141,6 +145,7 @@ void initSPIFFS()
     }
 }
 
+//task 1
 void initWiFi()
 {
     char text[LEN];
@@ -241,6 +246,7 @@ void readUart(void)
                 }
             }
             
+            //task 1
             if (receivedText == "RESET") 
             {
                 Serial.println("Rebooting...");

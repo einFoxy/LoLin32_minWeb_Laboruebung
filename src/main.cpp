@@ -104,6 +104,12 @@ void setup()
         request->send(SPIFFS, "/logo.png", "image/png");
     });
 
+    //second picture for task 6:
+    server.on("/kuran", HTTP_GET, 
+    [](AsyncWebServerRequest *request)
+    {
+        request->send(SPIFFS, "/kuran.jpeg", "image/jpeg");
+    });
     
     server.begin();
 
@@ -255,6 +261,8 @@ void readUart(void)
 
 String processor(const String& var)
 {
+    Serial.print("prossor running: with var:");
+    Serial.println(var);
     if (var == "STATE") 
     {
         if (digitalRead(led5)) // hier sollte man vielleicht go verwenden 
@@ -279,12 +287,13 @@ String processor(const String& var)
 
     return String();
 }
-
+//task 4: sends messages to every Client connected
 void notifyClients(String state)
 {
     ws.textAll(state);
 }
 
+//task 4:
 void handleWebSocketMessage(void *arg, uint8_t * data, size_t len)
 {
     AwsFrameInfo * info = (AwsFrameInfo*)arg;
@@ -295,7 +304,7 @@ void handleWebSocketMessage(void *arg, uint8_t * data, size_t len)
         if (strcmp((char*)data, "bON") == 0)
         {
             ledState = H;
-            notifyClients("ON!!!");
+            notifyClients("ON!!!"); 
 
             printf("handleWebSocketMessage: on\n");
 

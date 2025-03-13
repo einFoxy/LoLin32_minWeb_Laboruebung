@@ -24,14 +24,17 @@ function onClose(event) {
     setTimeout(initWebSocket, 2000);
 }
 
-function onMessage(event) {
+//task 4: 
+function onMessage(event) {     //when client recives a message from the ESP:
     var text;
     var len;
 
-    // console.log(event.data);
+    console.log("package recived from ESP:")
+    console.log(event.data);
 
     if (event.data.charAt(0) == 'O')  // ON / OFF
     {
+        console.log("updating state")
         document.getElementById('state').innerHTML = event.data;
     }    
     
@@ -43,9 +46,11 @@ function initButton() {
 }
 
 function toggleON(event) {
-    websocket.send('bON'); console.log("toggleON");
+    websocket.send('bON'); 
+    console.log("toggleON!");
 }
 
 function toggleOFF(event) {
-    websocket.send('bOFF'); console.log("toggleOFF");
+    websocket.send('bOFF'); 
+    console.log("toggleOFF!");
 }

@@ -1,19 +1,19 @@
 html 
 {
-    font-family: Verdana; 
+    font-family: Wingdings; 
     text-align: center;
 }
 
 h1 
 {
     font-size: 1.8rem; 
-    color: #ffffff;  
+    color: #ffb662;  
 }
 
 .topnav
 {
     overflow: hidden;
-    background-color: #0A1128;  
+    background-color: #6b0000;  
 }
 
 body
@@ -36,7 +36,7 @@ body
 }
 .card-grid
 {
-    background-color: white;
+    background-color: rgb(255, 149, 107);
     box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
 }
 .card-title
@@ -71,17 +71,17 @@ button
 }
 .button-on
 {
-    background-color: #6ef116;
+    background-color: #f14916;
 }
 .button-on:hover
 {
-    background-color: #f6ee05;
+    background-color: #ff0000;
 }
 .button-off
 {
-    background-color: #0c0c0c;
+    background-color: #500000;
 }
 .button-off:hover
 {
-    background-color: #3d0520;
+    background-color: #830101;
 }
